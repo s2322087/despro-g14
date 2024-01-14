@@ -3,6 +3,7 @@ import datetime
 import urllib.request
 import sqlite3
 from bs4 import BeautifulSoup
+import csv
 
 def str2float(weather_data):
     try:
@@ -73,11 +74,37 @@ def create_output():
     # 変更を保存
     conn.commit()
 
+
+    print("weather_data.dbを作成しました。")
+
+if __name__ == '__main__':
+    create_output()
+
+    conn = sqlite3.connect('weather_data.db')
+    cursor = conn.cursor()
+
+    # CSVファイルをテーブルに挿入
+    with open('local.csv', 'r') as file:
+        csv_reader = csv.reader(file)
+        
+        # ヘッダー行をスキップ
+        header = next(csv_reader)
+        
+        # テーブルが存在しない場合は作成
+        cursor.execute('''CREATE TABLE IF NOT EXISTS local (
+                           date TEXT,
+                           "number of steps" INTEGER,
+                           "Part Time Job" INTEGER
+                         )''')
+
+        for row in csv_reader:
+            cursor.execute('INSERT INTO local VALUES (?, ?, ?)', tuple(row))
+
+    # 変更を保存
+    conn.commit()
+
     # 接続を閉じる
     conn.close()
 
     print("done")
-
-if __name__ == '__main__':
-    create_output()
 
