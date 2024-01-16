@@ -47,9 +47,9 @@ def create_output():
                         date TEXT,
                         time TEXT,
                         pressure_local REAL,
+                        pressure_local_sea REAL,
                         precipitation REAL,
                         temperature REAL,
-                        humidity REAL,
                         wind_speed REAL,
                         sunshine_duration REAL
                     )''')
@@ -64,8 +64,8 @@ def create_output():
         for dpd in data_per_day:
             # データをデータベースに挿入
             cursor.execute('''INSERT INTO weather (date, time, pressure_local,
-                                                    precipitation, temperature,
-                                                    humidity, wind_speed,
+                                                    pressure_local_sea, precipitation,
+                                                    temperature, wind_speed,
                                                     sunshine_duration)
                               VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', dpd[:8])  # 最初の8個のデータを使う
 
@@ -107,4 +107,3 @@ if __name__ == '__main__':
     conn.close()
 
     print("done")
-
